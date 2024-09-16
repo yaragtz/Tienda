@@ -1,0 +1,9 @@
+public class ManejadorProductos
+{
+    Base b = new Base("localhost", "root", "", "Tienda");
+public void Modificar(int idproducto, TextBox Nombre, TextBox Descripcion, TextBox Precio)
+{
+    b.Comando($"update productos set nombre='{Nombre.Text}', descripcion='{Descripcion.Text}', precio='{Precio.Text}' where idproducto={idproducto}");
+    MessageBox.Show("Registro Modificado", "Atención!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+}
+}
