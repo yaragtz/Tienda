@@ -1,0 +1,88 @@
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using AccesoDatosBD;
+using EntidadesP;
+
+namespace ManejadoresP
+{
+    public class ManejadorProductos
+    {
+        Base b = new Base("localhost", "root", "", "Tienda");
+        public string Guardar(TextBox Nombre, TextBox Descripcion, TextBox Precio)
+        {
+
+            try
+            {
+                return b.Comando($"call p_InsertarProducto(NULL,'{Nombre.Text}','{Descripcion.Text}','{Precio.Text}')");
+            }
+            catch (Exception)
+            {
+                return "Error de Valor";
+            }
+        }
+
+        public void Mostrar(DataGridView Tabla, string filtro)
+        {
+            Tabla.Columns.Clear();
+            var dataSet = b.Consultar($"SELECT idproducto, nombre, descripcion, precio FROM productos WHERE idproducto LIKE '%{filtro}%'", "productos");
+
+            if (dataSet != null && dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+            {
+                Tabla.DataSource = dataSet.Tables[0];
+
+                Tabla.Columns.Insert(4, Boton("Eliminar", Color.Pink));
+                Tabla.Columns.Insert(5, Boton("Modificar", Color.Green));
+                Tabla.AutoResizeColumns();
+                Tabla.AutoResizeRows();
+            }
+        }
+        DataGridViewButtonColumn Boton(string t, Color f)
+        {
+            DataGridViewButtonColumn x = new DataGridViewButtonColumn();
+            x.Text = t;
+            x.UseColumnTextForButtonValue = true;
+            x.FlatStyle = FlatStyle.Popup;
+            x.DefaultCellStyle.ForeColor = Color.White;
+            x.DefaultCellStyle.BackColor = f;
+            return x;
+        }
+
+        public void Borrar(int idproducto, string Dato)
+        {
+            DialogResult rs = MessageBox.Show($"Esta seguro de borrar:{Dato}", "Atencion!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (rs == DialogResult.Yes)
+            {
+                b.Comando($"call p_EliminarProducto ('{idproducto}')");
+                MessageBox.Show("Registro Eliminado", "Atención!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        public void Modificar(int idproducto, TextBox Nombre, TextBox Descripcion, TextBox Precio)
+        {
+            b.Comando($"update productos set nombre='{Nombre.Text}', descripcion='{Descripcion.Text}', precio='{Precio.Text}' where idproducto={idproducto}");
+            MessageBox.Show("Registro Modificado", "Atención!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+        public void BuscarP(DataGridView Tabla, string filtro)
+        {
+            Tabla.Columns.Clear();
+            Tabla.DataSource =b.Consultar($"select * from productos where nombre like '%{filtro}%'", "productos").Tables[0];
+            Tabla.Columns.Insert(4, Boton("Modificar", Color.Pink));
+            Tabla.Columns.Insert(5, Boton("Eliminar", Color.Pink));
+            Tabla.AutoResizeColumns();
+            Tabla.AutoResizeRows();
+        }
+        public DataTable ObtenerProducto()
+        {
+            return b.Consultar("SELECT idproducto, nombre, descripcion, precio FROM productos", "productos").Tables[0];
+        }
+        public DataTable Consultar(string consulta)
+        {
+            return b.Consultar(consulta, "usuarios").Tables[0];
+        }
+    }
+}
