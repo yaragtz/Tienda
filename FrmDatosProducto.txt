@@ -1,0 +1,64 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using ManejadoresP;
+
+namespace Tienda
+{
+    public partial class FrmDatosProducto : Form
+    {
+        ManejadorProductos mp;
+        public static int idproducto;
+        public static string nombre, descripcion, precio;
+
+        int fila = 0, columna = 0;
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            Close();
+            txtNombre.Clear();
+            txtDescripcion.Clear();
+            txtPrecio.Clear();
+        }
+
+        public FrmDatosProducto()
+        {
+            InitializeComponent();
+            mp = new ManejadorProductos();
+            if (Form1.idproducto > 0)
+            {
+                txtNombre.Text = Form1.nombre;
+                txtDescripcion.Text = Form1.descripcion;
+                txtPrecio.Text = Form1.precio;
+            }
+
+        }
+
+        private void btnAceptar_Click(object sender, EventArgs e)
+        {
+            if (Form1.idproducto > 0)
+            {
+
+                mp.Modificar(Form1.idproducto, txtNombre, txtDescripcion, txtPrecio);
+                txtNombre.Clear();
+                txtDescripcion.Clear();
+                txtPrecio.Clear();
+            }
+            else
+            {
+
+                mp.Guardar(txtNombre, txtDescripcion, txtPrecio);
+                txtNombre.Clear();
+                txtDescripcion.Clear();
+                txtPrecio.Clear();
+
+            }
+            MessageBox.Show("Correcto", "Atención!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+    }
+}
