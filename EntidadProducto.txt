@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EntidadesP
+{
+    public class EntidadProducto
+    {
+        public EntidadProducto(string nombre, string descripcion, string precio)
+        {
+            this.nombre = nombre;
+            this.decripcion = descripcion;
+            this.precio = precio;
+        }
+
+        public string nombre { get; set; }
+        public string decripcion { get; set; }
+        public string precio { get; set; }
+    }
+}
