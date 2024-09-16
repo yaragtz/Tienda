@@ -1,0 +1,16 @@
+ public class ManejadorProductos
+ {
+     Base b = new Base("localhost", "root", "", "Tienda");
+     public string Guardar(TextBox Nombre, TextBox Descripcion, TextBox Precio)
+     {
+
+         try
+         {
+             return b.Comando($"call p_InsertarProducto(NULL,'{Nombre.Text}','{Descripcion.Text}','{Precio.Text}')");
+         }
+         catch (Exception)
+         {
+             return "Error de Valor";
+         }
+     }
+}
