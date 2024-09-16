@@ -1,0 +1,26 @@
+ public class ManejadorProductos
+ {
+     Base b = new Base("localhost", "root", "", "Tienda");
+     
+     DataGridViewButtonColumn Boton(string t, Color f)
+     {
+         DataGridViewButtonColumn x = new DataGridViewButtonColumn();
+         x.Text = t;
+         x.UseColumnTextForButtonValue = true;
+         x.FlatStyle = FlatStyle.Popup;
+         x.DefaultCellStyle.ForeColor = Color.White;
+         x.DefaultCellStyle.BackColor = f;
+         return x;
+     }
+
+     public void Borrar(int idproducto, string Dato)
+     {
+         DialogResult rs = MessageBox.Show($"Esta seguro de borrar:{Dato}", "Atencion!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+         if (rs == DialogResult.Yes)
+         {
+             b.Comando($"call p_EliminarProducto ('{idproducto}')");
+             MessageBox.Show("Registro Eliminado", "Atención!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+         }
+     }
+
+  }
