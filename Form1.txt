@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using ManejadoresP;
+using EntidadesP;
+
+namespace Tienda
+{
+    public partial class Form1 : Form
+    {
+        ManejadorProductos mp;
+        public static int idproducto;
+        public static string nombre, descripcion, precio;
+        int fila = 0, columna = 0;
+
+        private void dtgvProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            fila = e.RowIndex; columna = e.ColumnIndex;
+            switch (columna)
+            {
+                case 05:
+                    {
+                        idproducto = int.Parse(dtgvProductos.Rows[fila].Cells[0].Value.ToString());
+                        mp.Borrar(idproducto, dtgvProductos.Rows[fila].Cells[1].Value.ToString());
+                        mp.Mostrar(dtgvProductos, "");
+                    }
+                    break;
+                case 04:
+                    {
+
+                        idproducto = int.Parse(dtgvProductos.Rows[fila].Cells[0].Value.ToString());
+                        nombre = dtgvProductos.Rows[fila].Cells[1].Value.ToString();
+                        descripcion = dtgvProductos.Rows[fila].Cells[2].Value.ToString();
+                        precio = dtgvProductos.Rows[fila].Cells[3].Value.ToString();
+
+                        FrmDatosProducto dp = new FrmDatosProducto();
+                        dp.ShowDialog();
+
+                        mp.Mostrar(dtgvProductos, "");
+
+                    }
+                    break;
+            }
+        }
+
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+            mp= new ManejadorProductos();
+        }
+
+        private void btnAgregarProducto_Click(object sender, EventArgs e)
+        {
+            FrmDatosProducto dp= new FrmDatosProducto();
+            dp.Show();
+        }
+
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+            dtgvProductos.Visible = true;
+            mp.BuscarP(dtgvProductos, txtBuscar.Text);
+        }
+    }
+}
